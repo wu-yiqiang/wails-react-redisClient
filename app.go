@@ -41,7 +41,25 @@ func (a *App) ConnectionList() interface{} {
 func (a *App) ConnectionCreate(conn *define.Connection) H {
 	err := service.ConnectionCreate(conn)
 	if err != nil {
-		return M{"code": -1, "msg": "创建连接失败", "data": ""}
+		return M{"code": -1, "msg": "新建连接失败", "data": ""}
 	}
-	return M{"code": 200, "msg": "创建连接成功", "data": ""}
+	return M{"code": 200, "msg": "新建连接成功", "data": ""}
+}
+
+// 编辑连接
+func (a *App) ConnectionEdit(conn *define.Connection) H {
+	err := service.ConnectionEdit(conn)
+	if err != nil {
+		return M{"code": -1, "msg": "编辑连接失败", "data": ""}
+	}
+	return M{"code": 200, "msg": "编辑连接成功", "data": ""}
+}
+
+// 删除连接
+func (a *App) ConnectionDelete(conn *define.Connection) H {
+	err := service.ConnectionDelete(conn)
+	if err != nil {
+		return M{"code": -1, "msg": "删除连接失败", "data": ""}
+	}
+	return M{"code": 200, "msg": "删除连接成功", "data": ""}
 }

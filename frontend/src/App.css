@@ -12,10 +12,10 @@
     height: 100vh;
     min-width: 18%;
     border-right: 1px solid rgb(229, 226, 226);
-    padding: 10px;
+    padding: 10px 0;
 }
 .content {
     height: 100vh;
     width: 78%;
-    padding: 10px;
+    padding: 0px;
 }
