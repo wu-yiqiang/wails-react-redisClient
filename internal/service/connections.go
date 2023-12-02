@@ -19,7 +19,6 @@ func ConnectionList() ([]*define.Connection, error) {
 	}
 	conf := new(define.Config)
 	err = json.Unmarshal(data, conf)
-	fmt.Println("ss事实上", err)
 	if err != nil {
 		return nil, err
 	}

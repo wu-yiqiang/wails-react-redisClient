@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Collapse, message } from 'antd'
+import { Button, Collapse, message, Popconfirm } from 'antd'
 const { Panel } = Collapse
 import Connection from '../components/Connection'
 import { SettingFilled, DeleteFilled } from '@ant-design/icons'
@@ -9,6 +9,7 @@ const formDatas = {
   identify: '',
   name: '',
   port: '',
+  addr: '',
   username: '',
   password: ''
 }
@@ -55,6 +56,10 @@ function Pannel() {
     }
   }
 
+  const cancel = (event: Event) => {
+    event.stopPropagation()
+  }
+
   const genExtra = (values: any) => (
     <>
       <SettingFilled
@@ -65,13 +70,10 @@ function Pannel() {
           event.stopPropagation()
         }}
       />
-      <DeleteFilled
-        onClick={(event) => {
-          handleDelete(values)
-          event.stopPropagation()
-        }}
-        style={{ marginLeft: 5, color: '#ff4d4f' }}
-      />
+
+      <Popconfirm title="确认删除该连接？" onConfirm={() => handleDelete(values)} onCancel={(event) => cancel(event)} okText="确认" cancelText="取消">
+        <DeleteFilled style={{ marginLeft: 5, color: '#ff4d4f' }} onClick={(event) => event.stopPropagation()} />
+      </Popconfirm>
     </>
   )
   return (

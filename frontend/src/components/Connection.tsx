@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Modal, Form, Input, Col, Row, message, Button } from 'antd'
+import {isIp4} from '../utils/validator'
 import { ConnectionCreate, ConnectionEdit } from '../../wailsjs/go/main/App'
 import './Connection.css'
 function Connection(props: any) {
@@ -59,8 +60,16 @@ function Connection(props: any) {
     flush()
     handleOpen(false)
   }
-
-
+  const checkIp4 = (_: any, value: string) => {
+    if (!value) return Promise.resolve()
+    console.log('valiue', value,isIp4(value))
+    if (!isIp4(value)) {
+      return Promise.reject(new Error('IP地址不合法（不支持localhost写法）'))
+    } else {
+      return Promise.resolve()
+    }
+  }
+  
   return (
     <Modal title={title} width={'80%'} open={isModalOpen} onCancel={handleCancel} footer={null}>
       <Form form={form} labelCol={{ span: 6 }} autoComplete="off">
@@ -71,7 +80,7 @@ function Connection(props: any) {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="连接地址" name="addr" rules={[{ required: true, message: '请输入连接地址' }]}>
+            <Form.Item label="连接地址" name="addr" validateTrigger={['onChange', "onBlur"]} rules={[{ validator: checkIp4 }]}>
               <Input />
             </Form.Item>
           </Col>
