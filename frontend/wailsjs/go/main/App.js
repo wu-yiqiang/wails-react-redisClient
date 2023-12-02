@@ -18,6 +18,18 @@ export function ConnectionList() {
   return window['go']['main']['App']['ConnectionList']();
 }
 
+export function DbList(arg1) {
+  return window['go']['main']['App']['DbList'](arg1);
+}
+
+export function GetKeyValue(arg1) {
+  return window['go']['main']['App']['GetKeyValue'](arg1);
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
+}
+
+export function KeyList(arg1) {
+  return window['go']['main']['App']['KeyList'](arg1);
 }

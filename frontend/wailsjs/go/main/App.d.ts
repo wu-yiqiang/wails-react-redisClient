@@ -11,4 +11,10 @@ export function ConnectionEdit(arg1:define.Connection):Promise<main.H>;
 
 export function ConnectionList():Promise<any>;
 
+export function DbList(arg1:string):Promise<any>;
+
+export function GetKeyValue(arg1:define.KeyValueRequest):Promise<main.H>;
+
 export function Greet(arg1:string):Promise<string>;
+
+export function KeyList(arg1:define.KeyListRequest):Promise<main.H>;

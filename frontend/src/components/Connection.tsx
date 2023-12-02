@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Modal, Form, Input, Col, Row, message, Button } from 'antd'
 import {isIp4} from '../utils/validator'
 import { ConnectionCreate, ConnectionEdit } from '../../wailsjs/go/main/App'
-import './Connection.css'
+import '../style/Connection.css'
 function Connection(props: any) {
   let [form] = Form.useForm()
   const {open, title, handleOpen, flush, forms } = props

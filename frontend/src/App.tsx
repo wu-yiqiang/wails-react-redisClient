@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Pannel from './layout/pannel'
 import Content from './layout/content'
-import './App.css';
+import './style/App.css';
 function App() {
     return (
       <div id="App">

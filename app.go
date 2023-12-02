@@ -63,3 +63,36 @@ func (a *App) ConnectionDelete(conn *define.Connection) H {
 	}
 	return M{"code": 200, "msg": "删除连接成功", "data": ""}
 }
+
+// DB列表
+func (a *App) DbList(identify string) interface{} {
+	dbs, err := service.DbList(identify)
+	if err != nil {
+		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+	}
+	return M{"code": 200, "data": dbs, "msg": ""}
+}
+
+// 键列表
+func (a *App) KeyList(req define.KeyListRequest) H {
+	if req.ConnIdentify == "" {
+		return M{"code": -1, "msg": "连接唯一标识不能为空", "data": ""}
+	}
+	keys, err := service.KeyList(req)
+	if err != nil {
+		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+	}
+	return M{"code": 200, "data": keys, "msg": ""}
+}
+
+// 键值对查询
+func (a *App) GetKeyValue(req *define.KeyValueRequest) H {
+	if req.Key == "" || req.ConnIdentify == "" {
+		return M{"code": -1, "msg": "标识符和键名不能为空", "data": ""}
+	}
+	keys, err := service.GetKeyValue(req)
+	if err != nil {
+		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+	}
+	return M{"code": 200, "data": keys, "msg": ""}
+}

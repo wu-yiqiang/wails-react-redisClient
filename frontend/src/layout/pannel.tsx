@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Button, Collapse, message, Popconfirm } from 'antd'
+import { Button, Collapse, message, Popconfirm, Select } from 'antd'
 const { Panel } = Collapse
 import Connection from '../components/Connection'
-import { SettingFilled, DeleteFilled } from '@ant-design/icons'
-import { ConnectionList, ConnectionDelete } from '../../wailsjs/go/main/App'
+import Setting from '../components/Setting'
+import Keys from './Keys'
+import { SettingFilled, DeleteFilled, CaretRightOutlined, RedoOutlined,EditFilled  } from '@ant-design/icons'
+import { ConnectionList, ConnectionDelete, DbList, KeyList } from '../../wailsjs/go/main/App'
 import { useForm } from 'antd/es/form/Form'
+import '../style/pannel.css'
 const formDatas = {
   identify: '',
   name: '',
@@ -15,8 +18,14 @@ const formDatas = {
 }
 function Pannel() {
   const [list, setList] = useState([])
+  const [identify, setIdentify] = useState('')
+  const [keys, setKeys] = useState([])
+  const [db, setDb] = useState("")
+  const [dbName, setDbName] = useState('')
+  const [dbdata, setDbData] = useState([])
   const [forms, setForms] = useState({})
   const [open, setOpen] = useState(false)
+  const [settingOpen, setSettingOpen] = useState(false)
   const [title, setTitle] = useState('新建连接')
   useEffect(() => {
     flush()
@@ -25,12 +34,27 @@ function Pannel() {
     const { data, code, msg } = await ConnectionList()
     if (code === 200) {
       setList(data)
+      message.success('获取连接列表成功')
     } else {
       message.error(msg ? msg : '连接失败')
     }
   }
-  const onChange = (key: string | string[]) => {
-    console.log(key)
+  const queryLink = async (key: string | string[]) => {
+    if (!key.length) return
+    setIdentify(key[0])
+    const { code, data, msg } = await DbList(key[0])
+    if (code === 200) {
+      setDbData(
+        data.map((d: any) => {
+          return { value: d.key, label: `${d.key} (${d.number})` }
+        })
+      )
+      setDb(data[0].key)
+    } else {
+      setDbData([])
+      setDb("")
+      message.error(msg)
+    }
   }
   const createLink = () => {
     handleTitle('新建连接')
@@ -45,6 +69,9 @@ function Pannel() {
   const handleTitle = (value: string) => {
     setTitle(value)
   }
+  const handleSettingOpen = (value: boolean) => {
+    setSettingOpen(value)
+  }
 
   const handleDelete = async (values: any) => {
     const { data, code, msg } = await ConnectionDelete(values)
@@ -56,13 +83,23 @@ function Pannel() {
     }
   }
 
-  const cancel = (event: Event) => {
+  const cancel = (event: any) => {
     event.stopPropagation()
   }
-
+  
+  const handleChangeDb = async (value: string, identify: string) => {
+    const { data, code, msg } = await KeyList({ conn_identify: identify, db: parseInt(value.slice(2)), keyword: '' })
+    setDbName(value)
+    if (code === 200) {
+      setKeys(data)
+    } else {
+      setKeys([])
+      message.error(msg)
+    }
+  }
   const genExtra = (values: any) => (
     <>
-      <SettingFilled
+      <EditFilled
         onClick={(event) => {
           handleTitle('编辑连接')
           setForms(values)
@@ -70,29 +107,46 @@ function Pannel() {
           event.stopPropagation()
         }}
       />
-
-      <Popconfirm title="确认删除该连接？" onConfirm={() => handleDelete(values)} onCancel={(event) => cancel(event)} okText="确认" cancelText="取消">
-        <DeleteFilled style={{ marginLeft: 5, color: '#ff4d4f' }} onClick={(event) => event.stopPropagation()} />
+      <RedoOutlined
+        style={{ margin: '0 5px' }}
+        onClick={(event) => {
+          queryLink([values.identify])
+          event.stopPropagation()
+        }}
+      />
+      <Popconfirm title="确认删除该连接？" placement="bottom" onConfirm={() => handleDelete(values)} onCancel={(event) => cancel(event)} okText="确认" cancelText="取消">
+        <DeleteFilled onClick={(event) => event.stopPropagation()} />
       </Popconfirm>
     </>
   )
   return (
-    <>
-      <Button type="primary" onClick={createLink} style={{ marginBottom: '10px' }}>
-        创建连接
-      </Button>
-      <Collapse onChange={onChange} ghost>
+    <div className="pannel">
+      <div className="btns">
+        <Button type="primary" onClick={createLink}>
+          新建连接
+        </Button>
+        <Button onClick={flush} icon={<RedoOutlined />}></Button>
+        <Button onClick={() => handleSettingOpen(true)} icon={<SettingFilled />}></Button>
+      </div>
+      <Collapse onChange={queryLink} ghost accordion expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} style={{ background: '#f5f5f5' }} />}>
         {list.length &&
           list.map((item: any) => {
             return (
               <Panel header={item.name} key={item.identify} extra={genExtra(item)}>
-                {item.addr}
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                  <Select defaultValue={db} style={{ width: '50%' }} onChange={(value) => handleChangeDb(value, item.identify)} options={dbdata} />
+                  <Button style={{ width: '50%', marginLeft: '10px' }}>New Key</Button>
+                </div>
+                <div className="keys">
+                  <Keys keyList={keys} db={dbName} identify={identify} />
+                </div>
               </Panel>
             )
           })}
       </Collapse>
-      <Connection open={open} handleOpen={handleOpen} title={title} flush={flush} forms={ forms } />
-    </>
+      <Connection open={open} handleOpen={handleOpen} title={title} flush={flush} forms={forms} />
+      <Setting open={settingOpen} handleOpen={handleSettingOpen} />
+    </div>
   )
 }
 
