@@ -48,3 +48,12 @@ type KeyValueReply struct {
 	TTL   time.Duration `json:"ttl"`
 	Value string        `json:"value"`
 }
+
+type KeyValueUpdate struct {
+	ConnIdentify string        `json:"conn_identify"`
+	Db           int           `json:"db"`
+	Type         string        `json:"type"`
+	TTL          time.Duration `json:"ttl"`
+	Key          string        `json:"key"`
+	Value        string        `json:"value"`
+}

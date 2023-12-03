@@ -1,14 +1,53 @@
 import { useEffect, useState } from 'react'
-import { Col, Row, Input, Form, Button } from 'antd'
-import { DeleteFilled, SyncOutlined } from '@ant-design/icons'
+import { Col, Row, Input, Form, Button, message } from 'antd'
+import { DeleteFilled, SyncOutlined, SaveOutlined } from '@ant-design/icons'
+import { GetKeyValue, DeleteKeyValue, SetKeyValue } from '../../wailsjs/go/main/App'
 const { TextArea } = Input
 import '../style/Content.css'
 function Content(props:any) {
-  const { info } = props
+  const { info, flush } = props
   let [form] = Form.useForm()
+
   useEffect(() => {
     form.setFieldsValue(info)
   }, [info])
+
+  const handleDelete = async () => {
+    const { data, code, msg } = await DeleteKeyValue({ conn_identify: info.identify, db: parseInt(info.db.slice(2)), key: info.key })
+    if (code === 200) {
+      message.success('删除键成功')
+    } else {
+      message.error(msg)
+    }
+  }
+
+  const handleFlush = async () => {
+    const { data, code, msg } = await GetKeyValue({ conn_identify: info.identify, db: parseInt(info.db.slice(2)), key: info.key })
+    if (code === 200) {
+      form.setFieldsValue(data)
+      message.success('重新获取成功')
+    } else {
+      message.error(msg)
+    }
+  }
+
+  const handleSave = async () => {
+    const params = {
+      conn_identify: info.identify,
+      db: parseInt(info.db.slice(2)),
+      key: form.getFieldValue('key'),
+      value: form.getFieldValue('value'),
+      type: form.getFieldValue('type'),
+      ttl: form.getFieldValue('ttl')
+    }
+    const { data, code, msg } = await SetKeyValue(params)
+    if (code === 200) {
+      form.setFieldsValue(data)
+      message.success('键信息更新成功')
+    } else {
+      message.error(msg)
+    }
+  }
   return (
     <div className="contentItem">
       <Form form={form} autoComplete="off">
@@ -40,13 +79,15 @@ function Content(props:any) {
           </Col>
         </Row>
         <div className="submit">
-          <Button type="primary" icon={<DeleteFilled />} danger>
+          <Button type="primary" icon={<DeleteFilled />} danger onClick={handleDelete}>
             删除
           </Button>
-          <Button type="primary" icon={<SyncOutlined />}>
+          <Button type="primary" icon={<SyncOutlined />} onClick={handleFlush}>
             刷新
           </Button>
-          <Button type="primary">提交</Button>
+          <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+            保存
+          </Button>
         </div>
       </Form>
     </div>

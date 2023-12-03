@@ -3,11 +3,17 @@
   display: flex;
   justify-content: flex-start;
 }
-
 .pannel .btns button {
   margin: 0 10px;
 }
 
 .keys {
-  overflow: scroll;
+  overflow-y: scroll;
+  max-height: 500px;
+  scrollbar-width: none;
+  margin-top: 5px;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  };
 }

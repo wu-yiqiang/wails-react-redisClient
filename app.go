@@ -90,9 +90,33 @@ func (a *App) GetKeyValue(req *define.KeyValueRequest) H {
 	if req.Key == "" || req.ConnIdentify == "" {
 		return M{"code": -1, "msg": "标识符和键名不能为空", "data": ""}
 	}
-	keys, err := service.GetKeyValue(req)
+	kv, err := service.GetKeyValue(req)
 	if err != nil {
 		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
 	}
-	return M{"code": 200, "data": keys, "msg": ""}
+	return M{"code": 200, "data": kv, "msg": ""}
+}
+
+// 键值对删除
+func (a *App) DeleteKeyValue(req *define.KeyValueRequest) H {
+	if req.Key == "" || req.ConnIdentify == "" {
+		return M{"code": -1, "msg": "标识符和键名不能为空", "data": ""}
+	}
+	err := service.DeleteKeyValue(req)
+	if err != nil {
+		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+	}
+	return M{"code": 200, "data": "", "msg": ""}
+}
+
+// 键值对设置
+func (a *App) SetKeyValue(req *define.KeyValueUpdate) H {
+	if req.Key == "" || req.ConnIdentify == "" {
+		return M{"code": -1, "msg": "标识符和键名不能为空", "data": ""}
+	}
+	kv, err := service.SetKeyValue(req)
+	if err != nil {
+		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+	}
+	return M{"code": 200, "data": kv, "msg": ""}
 }

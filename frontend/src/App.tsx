@@ -8,7 +8,7 @@ function App() {
     <div id="App">
       <div className="main">
         <div className="pannel">
-          <Pannel setInfo={setInfo} />
+          <Pannel setInfo={setInfo} info={info} />
         </div>
         <div className="content">
           <Content info={info} />

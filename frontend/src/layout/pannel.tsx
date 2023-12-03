@@ -4,6 +4,7 @@ const { Panel } = Collapse
 import Connection from '../components/Connection'
 import Setting from '../components/Setting'
 import Keys from './Keys'
+import Add from '../components/Add'
 import { SettingFilled, DeleteFilled, CaretRightOutlined, RedoOutlined,EditFilled  } from '@ant-design/icons'
 import { ConnectionList, ConnectionDelete, DbList, KeyList } from '../../wailsjs/go/main/App'
 import { useForm } from 'antd/es/form/Form'
@@ -17,7 +18,7 @@ const formDatas = {
   password: ''
 }
 function Pannel(props: any) {
-  const {setInfo} = props
+  const { setInfo, info } = props
   const [list, setList] = useState([])
   const [identify, setIdentify] = useState('')
   const [keys, setKeys] = useState([])
@@ -28,6 +29,7 @@ function Pannel(props: any) {
   const [open, setOpen] = useState(false)
   const [settingOpen, setSettingOpen] = useState(false)
   const [title, setTitle] = useState('新建连接')
+  const [addOpen, setAddOpen] = useState(false)
   useEffect(() => {
     flush()
   }, [])
@@ -70,8 +72,15 @@ function Pannel(props: any) {
   const handleTitle = (value: string) => {
     setTitle(value)
   }
+  
   const handleSettingOpen = (value: boolean) => {
+    
     setSettingOpen(value)
+  }
+
+  const handleAddOpen = (value: boolean) => {
+    if (value && !info?.identify) return message.warning('请先选择DB')
+    setAddOpen(value)
   }
 
   const handleDelete = async (values: any) => {
@@ -84,6 +93,10 @@ function Pannel(props: any) {
     }
   }
 
+  const openAdd = () => {
+    
+    handleAddOpen(true)
+  }
   const cancel = (event: any) => {
     event.stopPropagation()
   }
@@ -91,8 +104,10 @@ function Pannel(props: any) {
   const handleChangeDb = async (value: string, identify: string) => {
     const { data, code, msg } = await KeyList({ conn_identify: identify, db: parseInt(value.slice(2)), keyword: '' })
     setDbName(value)
+    setInfo({ identify: identify, db: parseInt(value.slice(2)) })
     if (code === 200) {
       setKeys(data)
+      
     } else {
       setKeys([])
       message.error(msg)
@@ -136,7 +151,9 @@ function Pannel(props: any) {
               <Panel header={item.name} key={item.identify} extra={genExtra(item)}>
                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                   <Select defaultValue={db} style={{ width: '50%' }} onChange={(value) => handleChangeDb(value, item.identify)} options={dbdata} />
-                  <Button style={{ width: '50%', marginLeft: '10px' }}>New Key</Button>
+                  <Button style={{ width: '50%', marginLeft: '10px' }} onClick={() => openAdd()}>
+                    New Key
+                  </Button>
                 </div>
                 <div className="keys">
                   <Keys keyList={keys} db={dbName} identify={identify} setInfo={setInfo} />
@@ -147,6 +164,7 @@ function Pannel(props: any) {
       </Collapse>
       <Connection open={open} handleOpen={handleOpen} title={title} flush={flush} forms={forms} />
       <Setting open={settingOpen} handleOpen={handleSettingOpen} />
+      <Add open={addOpen} handleOpen={handleAddOpen} info={ info } />
     </div>
   )
 }

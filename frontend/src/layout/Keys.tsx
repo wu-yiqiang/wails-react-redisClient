@@ -10,6 +10,8 @@ function Keys(props: any) {
     setIndex(key)
     if (code === 200) {
       data.key = key
+      data.identify = identify
+      data.db = db
       setInfo(data)
       console.log('conte', data)
     } else {
