@@ -16,7 +16,8 @@ const formDatas = {
   username: '',
   password: ''
 }
-function Pannel() {
+function Pannel(props: any) {
+  const {setInfo} = props
   const [list, setList] = useState([])
   const [identify, setIdentify] = useState('')
   const [keys, setKeys] = useState([])
@@ -138,7 +139,7 @@ function Pannel() {
                   <Button style={{ width: '50%', marginLeft: '10px' }}>New Key</Button>
                 </div>
                 <div className="keys">
-                  <Keys keyList={keys} db={dbName} identify={identify} />
+                  <Keys keyList={keys} db={dbName} identify={identify} setInfo={setInfo} />
                 </div>
               </Panel>
             )

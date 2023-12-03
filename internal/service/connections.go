@@ -4,7 +4,6 @@ import (
 	"changeme/internal/define"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
@@ -12,10 +11,16 @@ import (
 
 // 连接列表
 func ConnectionList() ([]*define.Connection, error) {
-	nowpath, _ := os.Getwd()
-	data, err := ioutil.ReadFile(nowpath + string(os.PathSeparator) + define.ConfigName)
+	data, err := ioutil.ReadFile(define.ConfigPath)
 	if errors.Is(err, os.ErrNotExist) {
-		return nil, err
+		datas, err := json.Marshal(&define.Config{Connections: make([]*define.Connection, 0)})
+		if err != nil {
+			return nil, err
+		}
+		err = ioutil.WriteFile(define.ConfigPath, datas, 0777)
+		if err != nil {
+			return nil, err
+		}
 	}
 	conf := new(define.Config)
 	err = json.Unmarshal(data, conf)
@@ -40,25 +45,24 @@ func ConnectionCreate(conn *define.Connection) error {
 	conn.Identify = uuid.New().String()
 	conf := new(define.Config)
 	nowpath, _ := os.Getwd()
-	data, err := ioutil.ReadFile(nowpath + string(os.PathSeparator) + define.ConfigName)
+	data, err := ioutil.ReadFile(define.ConfigPath)
 	if errors.Is(err, os.ErrNotExist) {
-		os.Mkdir(nowpath, 0666)
+		os.Mkdir(nowpath, 0777)
 		conf.Connections = []*define.Connection{conn}
 		data, _ := json.Marshal(conf)
-		ioutil.WriteFile(nowpath+string(os.PathSeparator)+define.ConfigName, data, 0666)
+		ioutil.WriteFile(define.ConfigPath, data, 0777)
 		return nil
 	}
 	json.Unmarshal(data, conf)
 	conf.Connections = append(conf.Connections, conn)
 	data, _ = json.Marshal(conf)
-	ioutil.WriteFile(nowpath+string(os.PathSeparator)+define.ConfigName, data, 0666)
+	ioutil.WriteFile(define.ConfigPath, data, 0777)
 	return nil
 }
 
 // 编辑连接
 func ConnectionEdit(conn *define.Connection) error {
 	if conn.Identify == "" {
-		fmt.Println("erer", conn)
 		return errors.New("连接标识不能为空")
 	}
 	if conn.Addr == "" {
@@ -70,10 +74,8 @@ func ConnectionEdit(conn *define.Connection) error {
 	if conn.Port == "" {
 		conn.Port = "6379"
 	}
-
 	conf := new(define.Config)
-	nowpath, _ := os.Getwd()
-	data, err := ioutil.ReadFile(nowpath + string(os.PathSeparator) + define.ConfigName)
+	data, err := ioutil.ReadFile(define.ConfigPath)
 	if err != nil {
 		return err
 	}
@@ -84,7 +86,7 @@ func ConnectionEdit(conn *define.Connection) error {
 		}
 	}
 	data, _ = json.Marshal(conf)
-	ioutil.WriteFile(nowpath+string(os.PathSeparator)+define.ConfigName, data, 0666)
+	ioutil.WriteFile(define.ConfigPath, data, 0777)
 	return nil
 }
 
@@ -102,10 +104,8 @@ func ConnectionDelete(conn *define.Connection) error {
 	if conn.Port == "" {
 		conn.Port = "6379"
 	}
-
 	conf := new(define.Config)
-	nowpath, _ := os.Getwd()
-	data, err := ioutil.ReadFile(nowpath + string(os.PathSeparator) + define.ConfigName)
+	data, err := ioutil.ReadFile(define.ConfigPath)
 	if err != nil {
 		return err
 	}
@@ -116,6 +116,6 @@ func ConnectionDelete(conn *define.Connection) error {
 		}
 	}
 	data, _ = json.Marshal(conf)
-	ioutil.WriteFile(nowpath+string(os.PathSeparator)+define.ConfigName, data, 0666)
+	ioutil.WriteFile(define.ConfigPath, data, 0777)
 	return nil
 }

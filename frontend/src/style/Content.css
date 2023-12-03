@@ -1,0 +1,8 @@
+.contentItem {
+  color: black;
+}
+
+.submit {
+  display: flex;
+  justify-content: flex-end;
+}
