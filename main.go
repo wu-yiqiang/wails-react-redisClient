@@ -5,10 +5,12 @@ import (
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
+var icon []byte
 
 func main() {
 	// Create an instance of the app structure
@@ -26,6 +28,13 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+		},
+		Mac: &mac.Options{
+			About: &mac.AboutInfo{
+				Title:   "Godis",
+				Message: "© 2023",
+				Icon:    icon,
+			},
 		},
 	})
 

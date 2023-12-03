@@ -17,8 +17,6 @@ export function DeleteKeyValue(arg1:define.KeyValueRequest):Promise<main.H>;
 
 export function GetKeyValue(arg1:define.KeyValueRequest):Promise<main.H>;
 
-export function Greet(arg1:string):Promise<string>;
-
 export function KeyList(arg1:define.KeyListRequest):Promise<main.H>;
 
 export function SetKeyValue(arg1:define.KeyValueUpdate):Promise<main.H>;
