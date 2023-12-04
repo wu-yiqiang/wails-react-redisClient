@@ -32,7 +32,6 @@ function Pannel(props: any) {
   const [addOpen, setAddOpen] = useState(false)
   useEffect(() => {
     flush()
-    return
   }, [])
   const flush = async () => {
     const { data, code, msg } = await ConnectionList()
