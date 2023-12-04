@@ -26,7 +26,7 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) ConnectionList() interface{} {
 	conn, err := service.ConnectionList()
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": conn, "msg": ""}
 }
@@ -62,7 +62,7 @@ func (a *App) ConnectionDelete(conn *define.Connection) H {
 func (a *App) DbList(identify string) interface{} {
 	dbs, err := service.DbList(identify)
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": dbs, "msg": ""}
 }
@@ -74,7 +74,7 @@ func (a *App) KeyList(req define.KeyListRequest) H {
 	}
 	keys, err := service.KeyList(req)
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": keys, "msg": ""}
 }
@@ -86,7 +86,7 @@ func (a *App) GetKeyValue(req *define.KeyValueRequest) H {
 	}
 	kv, err := service.GetKeyValue(req)
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": kv, "msg": ""}
 }
@@ -98,7 +98,7 @@ func (a *App) DeleteKeyValue(req *define.KeyValueRequest) H {
 	}
 	err := service.DeleteKeyValue(req)
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": "", "msg": ""}
 }
@@ -110,7 +110,7 @@ func (a *App) SetKeyValue(req *define.KeyValueUpdate) H {
 	}
 	kv, err := service.SetKeyValue(req)
 	if err != nil {
-		return M{"code": -1, "msg": "Error" + err.Error(), "data": ""}
+		return M{"code": -1, "msg": err.Error(), "data": ""}
 	}
 	return M{"code": 200, "data": kv, "msg": ""}
 }

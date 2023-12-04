@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Col, Row, Input, Form, Button, message } from 'antd'
+import { Col, Row, Input, Form, Button, message, Select } from 'antd'
 import { DeleteFilled, SyncOutlined, SaveOutlined } from '@ant-design/icons'
 import { GetKeyValue, DeleteKeyValue, SetKeyValue } from '../../wailsjs/go/main/App'
 const { TextArea } = Input
+import {typeOptions} from '../utils/const'
 import '../style/Content.css'
 function Content(props:any) {
   const { info, flush } = props
   let [form] = Form.useForm()
-
+  const [options, setOptions] = useState(typeOptions)
   useEffect(() => {
+    console.log('sadas', info)
     form.setFieldsValue(info)
   }, [info])
 
@@ -34,7 +36,7 @@ function Content(props:any) {
   const handleSave = async () => {
     const params = {
       conn_identify: info.identify,
-      db: parseInt(info.db.slice(2)),
+      db: parseInt(info.db),
       key: form.getFieldValue('key'),
       value: form.getFieldValue('value'),
       type: form.getFieldValue('type'),
@@ -62,7 +64,8 @@ function Content(props:any) {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="type" label="类型">
-              <Input />
+              {/* <Input /> */}
+              <Select defaultValue={info.type} options={options} />
             </Form.Item>
           </Col>
           <Col span={12}>

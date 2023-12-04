@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Col, Row, Input, Form, Button, message, Modal } from 'antd'
+import { Col, Row, Input, Form, Button, message, Modal, Select } from 'antd'
+const { TextArea } = Input
 import { SaveOutlined } from '@ant-design/icons'
 import { SetKeyValue } from '../../wailsjs/go/main/App'
-const { TextArea } = Input
+import { typeOptions } from '../utils/const'
 import '../style/Content.css'
 function Add(props: any) {
   const { info, open, handleOpen } = props
   let [form] = Form.useForm()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [options, setOptions] = useState(typeOptions)
   useEffect(() => {
     setIsModalOpen(open)
   }, [open])
@@ -34,7 +36,7 @@ function Add(props: any) {
     handleOpen(false)
   }
   return (
-     <Modal title="新增" width={'80%'} open={isModalOpen} onCancel={handleCancel} footer={null}>
+    <Modal title="新增" width={'80%'} open={isModalOpen} onCancel={handleCancel} footer={null}>
       <Form form={form} autoComplete="off">
         <Row gutter={24}>
           <Col span={24}>
@@ -47,7 +49,7 @@ function Add(props: any) {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="type" label="类型">
-              <Input />
+              <Select defaultValue={info.type} options={options} />
             </Form.Item>
           </Col>
           <Col span={12}>

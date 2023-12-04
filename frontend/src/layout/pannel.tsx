@@ -74,7 +74,6 @@ function Pannel(props: any) {
   }
   
   const handleSettingOpen = (value: boolean) => {
-    
     setSettingOpen(value)
   }
 
