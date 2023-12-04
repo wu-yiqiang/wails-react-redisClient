@@ -49,7 +49,7 @@ function Add(props: any) {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="type" label="类型">
-              <Select defaultValue={info.type} options={options} />
+              <Select options={options} />
             </Form.Item>
           </Col>
           <Col span={12}>

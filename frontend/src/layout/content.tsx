@@ -56,7 +56,7 @@ function Content(props:any) {
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item name="key" label="键">
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
         </Row>
